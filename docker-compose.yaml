@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    container_name: template2_app
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DB_HOST=knli.your-database.de
+      - DB_USER=pizzapfd_1
+      - DB_PASSWORD=q9(TU/Y/N!EV
+      - DB_NAME=pizzapfd_db1
+      - NEXT_PUBLIC_MAINTENANCE=true
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data

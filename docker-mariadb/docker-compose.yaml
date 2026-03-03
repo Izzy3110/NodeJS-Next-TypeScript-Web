@@ -1,0 +1,24 @@
+services:
+  #mariadb:
+  #  image: mariadb:latest
+   # container_name: mariadb
+   # environment:
+   #   MARIADB_DATABASE: localdb
+    #  MARIADB_USER: dbuser
+    #  MARIADB_PASSWORD: qwert
+    #  MARIADB_ROOT_PASSWORD: qwert
+    #volumes:
+    #  - ./dbdata:/var/lib/mysql
+    #  - ./pizzaweb_db1.sql:/docker-entrypoint-initdb.d/pizzaweb_db1.sql:ro"
+    #ports:
+    #  - "3306:3306"
+    #restart: unless-stopped
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: knli.your-database.de
+      PMA_USER: pizzapfd_1
+      PMA_PASSWORD: q9(TU/Y/N!EV
+    ports:
+      - "8080:80"
