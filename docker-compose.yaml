@@ -1,7 +1,7 @@
 services:
-  app:
+  web:
     build: .
-    container_name: template2_app
+    container_name: pizzaservice_pfullendorf-web
     ports:
       - "3001:3001"
     environment:

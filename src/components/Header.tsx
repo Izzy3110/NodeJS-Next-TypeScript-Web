@@ -55,9 +55,10 @@ export default function Header() {
                         <span className="desk-only">07552 4000088</span>
                     </a>
                     <OpeningHours />
-                    <button onClick={toggleTheme} className="nav-item" style={{ background: 'none', border: 'none', fontSize: '1.2rem', fontFamily: 'inherit', cursor: 'pointer', marginRight: '1rem' }} title="Toggle Theme">
+                    {/* Theme Toggle hidden for now */}
+                    {/* <button onClick={toggleTheme} className="nav-item" style={{ background: 'none', border: 'none', fontSize: '1.2rem', fontFamily: 'inherit', cursor: 'pointer', marginRight: '1rem' }} title="Toggle Theme">
                         {theme === 'dark' ? <i className="fa-solid fa-sun"></i> : <i className="fa-solid fa-moon"></i>}
-                    </button>
+                    </button> */}
                     <div className="nav-item" style={{ marginRight: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <span 
                             onClick={() => setLanguage('de')} 

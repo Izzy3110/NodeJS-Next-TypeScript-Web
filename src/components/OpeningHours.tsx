@@ -1,10 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function OpeningHours() {
     const { t } = useLanguage();
     const [isOpenDropdown, setIsOpenDropdown] = useState(false);
     const [isOpenNow, setIsOpenNow] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleMouseEnter = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setIsOpenDropdown(true);
+    };
+
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setIsOpenDropdown(false);
+            timeoutRef.current = null;
+        }, 2000); // 2 second delay
+    };
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         const checkStatus = () => {
@@ -36,8 +58,8 @@ export default function OpeningHours() {
 
     return (
         <div className="opening-hours-container" 
-             onMouseEnter={() => setIsOpenDropdown(true)}
-             onMouseLeave={() => setIsOpenDropdown(false)}
+             onMouseEnter={handleMouseEnter}
+             onMouseLeave={handleMouseLeave}
              style={{ position: 'relative' }}>
             <button className="nav-item" style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ 

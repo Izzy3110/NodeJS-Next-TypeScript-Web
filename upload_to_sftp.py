@@ -12,7 +12,7 @@ LOCAL_ROOT = r"C:\Users\sasch\LocalCloud\repos\2026\Web\NodeJS-TypeScript\git\we
 REMOTE_ROOT = "/home/node_user"
 
 # Excluded patterns
-EXCLUDES = {".git", ".idea", "venv", "__pycache__", ".agent", ".gemini", "node_modules", ".next", "docker-mariadb"}
+EXCLUDES = {"app.access.log", "app.log", ".git", ".idea", "venv", "__pycache__", ".agent", ".gemini", "node_modules", ".next", "docker-mariadb"}
 
 # Concurrency limit
 MAX_CONCURRENT_UPLOADS = 20
@@ -91,7 +91,7 @@ async def sync_recursive(sftp, local_dir, remote_dir):
             
     return tasks
 
-async def main():
+async def main(recreate_only=False):
     try:
         print(f"Connecting to {HOST}...")
         async with asyncssh.connect(HOST, port=PORT, username=USER, client_keys=[PRIVATE_KEY_PATH], known_hosts=None) as conn:
@@ -111,10 +111,12 @@ async def main():
 
             # Execute remote deployment commands
             commands = [
-                f"chown -R azuracast:azuracast {REMOTE_ROOT}",
-                f"cd {REMOTE_ROOT} && docker-compose down",
+                f"chown -R node_user:node_user {REMOTE_ROOT}",
                 f"cd {REMOTE_ROOT} && docker-compose up --build -d"
             ]
+            
+            if not recreate_only:
+                commands.insert(1, f"cd {REMOTE_ROOT} && docker-compose down")
             
             for cmd in commands:
                 if not await run_remote_command(conn, cmd):
@@ -129,8 +131,14 @@ async def main():
         traceback.print_exc()
 
 if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Upload files via SFTP and optionally recreate Docker containers.")
+    parser.add_argument("--recreate_only", action="store_true", help="Run 'docker-compose down' before 'docker-compose up'")
+    args = parser.parse_args()
+
     if sys.platform == 'win32':
-        # Recommended for asyncssh/asyncio on Windows to avoid ProactorEventLoop issues with SSH
+        # Recommended for Windows to avoid ProactorEventLoop issues with SSH
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
-    asyncio.run(main())
+    asyncio.run(main(recreate_only=args.recreate_only))

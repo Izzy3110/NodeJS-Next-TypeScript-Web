@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Under Maintenance - TakeOff Restaurant [Offline]</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+    :root {
+      --primary-color: #ff6b6b;
+      --font-heading: "Poppins", sans-serif;
+      --font-body: "Inter", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #1a1a1a;
+      color: #f7f7f7;
+    }
+
+    .maintenanceContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      z-index: 10000;
+      background: url("https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80") no-repeat center center fixed;
+      background-size: cover;
+      font-family: var(--font-body);
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+      backdrop-filter: blur(8px);
+    }
+
+    .contentCard {
+      position: relative;
+      z-index: 10;
+      background: rgba(45, 45, 45, 0.4);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      max-width: 70vw;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .title {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 2rem;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .statusBadge {
+      display: inline-block;
+      background: rgba(255, 107, 107, 0.2);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 2rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+
+    .footer {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 2rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .contentCard {
+        padding: 3rem 1.5rem;
+      }
+      .title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="maintenanceContainer">
+    <div class="overlay"></div>
+    <div class="contentCard">
+      <h1 class="title">TakeOff Restaurant</h1>
+      <div class="statusBadge">Under Maintenance</div>
+      <p class="subtitle">
+        We're currently perfecting our recipes and upgrading our systems.
+        <br />
+        We'll be back shortly to take off with you!
+      </p>
+      <div class="footer" id="footer-text">
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('footer-text').innerHTML = '&copy; ' + new Date().getFullYear() + ' L&S Design. All rights reserved.';
+  </script>
+</body>
+</html>

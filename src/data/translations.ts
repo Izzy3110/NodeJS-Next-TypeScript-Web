@@ -51,9 +51,11 @@ export type TranslationKey =
   | "hours_open_now"
   | "hours_closed_now"
   | "admin_menu_add_item"
+  | "admin_menu_menu"
   | "admin_menu_editor"
   | "admin_menu_categories"
   | "admin_menu_settings"
+  | "admin_menu_backups"
   | "admin_menu_orders"
   | "general_refresh_btn"
   | "admin_dashboard"
@@ -130,9 +132,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     hours_open_now: "Open Now",
     hours_closed_now: "Closed",
     admin_menu_add_item: "Add Item",
+    admin_menu_menu: "Menu Editor",
     admin_menu_editor: "Menu Editor",
     admin_menu_categories: "Categories",
     admin_menu_settings: "General Settings",
+    admin_menu_backups: "Backup & Restore",
     admin_menu_orders: "Orders",
     general_refresh_btn: "Refresh",
     admin_dashboard: "Admin Dashboard",
@@ -208,9 +212,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     hours_open_now: "Jetzt geöffnet",
     hours_closed_now: "Geschlossen",
     admin_menu_add_item: "Eintrag hinzufügen",
+    admin_menu_menu: "Editor",
     admin_menu_editor: "Editor",
     admin_menu_categories: "Kategorien",
     admin_menu_settings: "Allgemeine Einstellungen",
+    admin_menu_backups: "Sichern und Wiederherstellen",
     admin_menu_orders: "Bestellungen",
     general_refresh_btn: "Neu Laden",
     admin_dashboard: "Admin Übersicht",

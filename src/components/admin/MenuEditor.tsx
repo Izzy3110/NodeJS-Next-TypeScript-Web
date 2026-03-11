@@ -421,8 +421,6 @@ export default function MenuEditor({ searchQuery = '' }: { searchQuery?: string 
                             <>
                                 <div className="form-group"><label>Price S</label><div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><EditableCell value={formatPrice(newItem.price_s)} onChange={val => setNewItem({...newItem, price_s: parsePrice(val)})} className="price-input" /><span>€</span></div></div>
                                 <div className="form-group"><label>Price M</label><div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><EditableCell value={formatPrice(newItem.price_m)} onChange={val => setNewItem({...newItem, price_m: parsePrice(val)})} className="price-input" /><span>€</span></div></div>
-                                <div className="form-group"><label>Price L</label><div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><EditableCell value={formatPrice(newItem.price_l)} onChange={val => setNewItem({...newItem, price_l: parsePrice(val)})} className="price-input" /><span>€</span></div></div>
-                                <div className="form-group"><label>Price XL</label><div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><EditableCell value={formatPrice(newItem.price_xl)} onChange={val => setNewItem({...newItem, price_xl: parsePrice(val)})} className="price-input" /><span>€</span></div></div>
                             </>
                         )}
                          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
@@ -571,7 +569,7 @@ function CategoryMenuCard({ category, items, categories, newItem, onItemUpdate, 
     let template = "4.5rem 4.5rem 6rem 12rem 14rem minmax(18rem, 1fr) 4.5rem 4rem 4rem "; 
 
     if (effectiveHasSingle) template += "6rem "; // Price column
-    if (hasMulti) template += "6rem 6rem 6rem 6rem "; // M, L, XL, XXL
+    if (hasMulti) template += "6rem 6rem "; // S, M
     if (hasMenu) template += "4.5rem 4.5rem 4.5rem "; // M1, M2, M3
     
     template += "4.5rem"; // Save column
@@ -606,8 +604,6 @@ function CategoryMenuCard({ category, items, categories, newItem, onItemUpdate, 
                                 <>
                                     <div className="grid-cell header-cell">S</div>
                                     <div className="grid-cell header-cell">M</div>
-                                    <div className="grid-cell header-cell">L</div>
-                                    <div className="grid-cell header-cell">XL</div>
                                 </>
                             )}
                             {hasMenu && (
@@ -826,8 +822,6 @@ function ItemRow({ item, categories, showSingle, showMulti, showMenu, onTypeChan
                 <>
                     <div className="grid-cell" data-label="S / P1" style={{ display: 'flex', alignItems: 'flex-start', gap: '4px' }}>{isMultiPriceItem && <><EditableCell value={formatPrice(data.price_s)} onChange={val => handleChange('price_s', parsePrice(val))} className="price-input" /><span style={{ marginTop: '10px' }}>€</span></>}</div>
                     <div className="grid-cell" data-label="M / P2" style={{ display: 'flex', alignItems: 'flex-start', gap: '4px' }}>{isMultiPriceItem && <><EditableCell value={formatPrice(data.price_m)} onChange={val => handleChange('price_m', parsePrice(val))} className="price-input" /><span style={{ marginTop: '10px' }}>€</span></>}</div>
-                    <div className="grid-cell" data-label="L / P3" style={{ display: 'flex', alignItems: 'flex-start', gap: '4px' }}>{isMultiPriceItem && <><EditableCell value={formatPrice(data.price_l)} onChange={val => handleChange('price_l', parsePrice(val))} className="price-input" /><span style={{ marginTop: '10px' }}>€</span></>}</div>
-                    <div className="grid-cell" data-label="XL / P4" style={{ display: 'flex', alignItems: 'flex-start', gap: '4px' }}>{isMultiPriceItem && <><EditableCell value={formatPrice(data.price_xl)} onChange={val => handleChange('price_xl', parsePrice(val))} className="price-input" /><span style={{ marginTop: '10px' }}>€</span></>}</div>
                 </>
             )}
 
