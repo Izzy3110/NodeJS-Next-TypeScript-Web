@@ -56,3 +56,5 @@ node_modules/
 dump.sql
 DONE.md
 2026-03-03_23-32-18.mp4
+venv/
+privkey
