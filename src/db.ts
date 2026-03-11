@@ -52,21 +52,40 @@ export async function getMenu(): Promise<Category[]> {
     }
 }
 
-export async function createOrder(customerName: string, items: any[], total: number) {
+export async function createOrder(email: string, address: string, items: any[], total: number) {
     let conn;
     try {
         conn = await pool.getConnection();
-        const basketContent = JSON.stringify(items);
+        
+        // Extract item IDs. If quantity is specified, we duplicate the ID for each quantity.
+        const itemIdsArray = items.flatMap(item => Array(item.quantity || 1).fill(item.itemId || item.id));
+        const itemIdsStr = itemIdsArray.join(',');
 
-        // Using client_orders table
+        const timestamp = Math.floor(Date.now() / 1000); // int(255) timestamp
+
+        // Insert including the new mail and client_address fields
         const res = await conn.query(
-            "INSERT INTO client_orders (cname, cbasket_content, ctimestamp) VALUES (?, ?, NOW())",
-            [customerName, basketContent]
+            "INSERT INTO orders (ItemIDs, order_text, timestamp, mail, client_address) VALUES (?, ?, ?, ?, ?)",
+            [itemIdsStr, "", timestamp, email, address]
         );
 
-        return { id: Number(res.insertId), customerName, total };
+        return { id: Number(res.insertId), email, address, total };
     } catch (err) {
         console.error("Error creating order:", err);
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function getOrders() {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query("SELECT * FROM orders ORDER BY id DESC");
+        return rows;
+    } catch (err) {
+        console.error("Error fetching orders:", err);
         throw err;
     } finally {
         if (conn) conn.release();

@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '@/context/AdminContext';
+import { useLanguage } from '@/context/LanguageContext';
 import EditableCell from './EditableCell';
 
 export default function GeneralSettings() {
+    const { t } = useLanguage();
     const [settings, setSettings] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(true);
     const { showToast } = useAdmin();
@@ -30,7 +32,7 @@ export default function GeneralSettings() {
         // Strip any existing characters, keep only digits, dots, commas
         let clean = value.replace(/[^\d.,]/g, '').trim();
         
-        if (key === 'delivery_costs' || key === 'tax_percentage') {
+        if (key === 'delivery_costs' || key === 'tax_food' || key === 'tax_drinks') {
             // Convert to metric format (comma as decimal separator)
             let num = parseFloat(clean.replace(',', '.'));
             if (isNaN(num)) return clean;
@@ -89,30 +91,33 @@ export default function GeneralSettings() {
         }
     };
 
-    if (loading) return <div>Loading settings...</div>;
+    if (loading) return <div>{t('admin_settings_loading')}</div>;
 
     return (
         <div className="general-settings">
-            <h2 className="section-title">General Settings</h2>
+            <h2 className="section-title">{t('admin_menu_settings')}</h2>
             
             <div className="table-responsive mt-3">
                 <table className="table table-hover settings-table">
                     <thead>
                         <tr>
-                            <th style={{ width: '25%' }}>Setting</th>
-                            <th style={{ width: '45%' }}>Description</th>
-                            <th style={{ width: '30%' }}>Value</th>
+                            <th style={{ width: '25%' }}>{t('admin_settings_col_setting')}</th>
+                            <th style={{ width: '45%' }}>{t('admin_settings_col_description')}</th>
+                            <th style={{ width: '30%' }}>{t('admin_settings_col_value')}</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr className="settings-group-row">
+                            <td colSpan={3}><strong>{t('admin_settings_taxes')}</strong></td>
+                        </tr>
                         <tr>
-                            <td><strong>Tax Percentage</strong></td>
-                            <td className="text-muted small">Standard VAT percentage for all items (e.g., 7 or 19).</td>
+                            <td><strong>{t('admin_settings_tax_category_food')}</strong></td>
+                            <td className="text-muted small">{t('admin_settings_tax_notice_food')}</td>
                             <td>
                                 <div className="input-group-custom">
                                     <EditableCell 
-                                        value={formatValue('tax_percentage', settings.tax_percentage || '0')} 
-                                        onChange={(val) => handleUpdate('tax_percentage', val)}
+                                        value={formatValue('tax_food', settings.tax_food || '0')} 
+                                        onChange={(val) => handleUpdate('tax_food', val)}
                                         className="form-control-custom"
                                         singleLine={true}
                                     />
@@ -121,8 +126,26 @@ export default function GeneralSettings() {
                             </td>
                         </tr>
                         <tr>
-                            <td><strong>Delivery Costs</strong></td>
-                            <td className="text-muted small">Fixed delivery fee applied to each order in Euro.</td>
+                            <td><strong>{t('admin_settings_tax_category_drinks')}</strong></td>
+                            <td className="text-muted small">{t('admin_settings_tax_notice_drinks')}</td>
+                            <td>
+                                <div className="input-group-custom">
+                                    <EditableCell 
+                                        value={formatValue('tax_drinks', settings.tax_drinks || '0')} 
+                                        onChange={(val) => handleUpdate('tax_drinks', val)}
+                                        className="form-control-custom"
+                                        singleLine={true}
+                                    />
+                                    <span className="input-addon">%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr className="settings-group-row">
+                            <td colSpan={3}><strong>{t('admin_settings_shipping_delivery')}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>{t('admin_settings_delivery_costs')}</strong></td>
+                            <td className="text-muted small">{t('admin_settings_delivery_costs_infotext')}</td>
                             <td>
                                 <div className="input-group-custom">
                                     <EditableCell 
@@ -153,10 +176,10 @@ export default function GeneralSettings() {
                     }}
                 >
                     <span style={{ fontSize: '1.2em' }}>🖨️</span>
-                    Test Printing
+                    {t('admin_settings_print_test_btn')}
                 </button>
                 <p className="text-muted mt-2 small">
-                    Generates a test receipt for item 153 and adds it to the print queue.
+                    {t('admin_settings_print_test_notice')}
                 </p>
             </div>
 
@@ -179,6 +202,16 @@ export default function GeneralSettings() {
                 .settings-table td {
                     padding: 12px;
                     vertical-align: middle;
+                }
+                .settings-group-row {
+                    background-color: #f1f3f5;
+                }
+                .settings-group-row td {
+                    padding: 8px 12px !important;
+                    text-transform: uppercase;
+                    font-size: 0.85rem;
+                    color: #495057;
+                    letter-spacing: 0.05em;
                 }
                 .input-group-custom {
                     display: flex;

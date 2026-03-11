@@ -18,7 +18,10 @@ const parsePrice = (val: string) => {
     return parseFloat(clean) || 0;
 };
 
+import { useLanguage } from '@/context/LanguageContext';
+
 export default function MenuEditor({ searchQuery = '' }: { searchQuery?: string }) {
+    const { t } = useLanguage();
     const { categories, items, zutaten, refreshData, showToast } = useAdmin();
     const [isAddItemOpen, setIsAddItemOpen] = useState(false);
     
@@ -228,7 +231,7 @@ export default function MenuEditor({ searchQuery = '' }: { searchQuery?: string 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     <button className="add-item-btn" onClick={() => setIsAddItemOpen(!isAddItemOpen)} style={{ marginBottom: 0 }}>
-                        <span style={{ fontSize: '18px' }}>+</span> Add Item
+                        <span style={{ fontSize: '18px' }}>+</span> {t('admin_menu_add_item')}
                     </button>
                     {markedForDeletion.size > 0 && (
                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#fffaf0', padding: '8px 12px', borderRadius: '8px', border: '1px solid #ed8936' }}>

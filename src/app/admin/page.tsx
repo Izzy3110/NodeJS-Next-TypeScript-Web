@@ -7,11 +7,14 @@ import MenuEditor from '@/components/admin/MenuEditor';
 import CategoryManager from '@/components/admin/CategoryManager';
 import BackupManager from '@/components/admin/BackupManager';
 import GeneralSettings from '@/components/admin/GeneralSettings';
+import OrderManager from '@/components/admin/OrderManager';
+
+import { useLanguage } from '@/context/LanguageContext';
 
 function AdminContent() {
-    const [activeTab, setActiveTab] = useState('menu');
-    const { refreshData, showToast } = useAdmin();
-
+    const { t } = useLanguage();
+    const { showToast, refreshData } = useAdmin();
+    const [activeTab, setActiveTab] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [showSearchInput, setShowSearchInput] = useState(false);
@@ -30,11 +33,21 @@ function AdminContent() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Auto-scroll the active tab into view when swiping changes it
+    // Load active tab from localStorage on mount
     useEffect(() => {
+        const savedTab = localStorage.getItem('adminActiveTab');
+        setActiveTab(savedTab || 'orders');
+    }, []);
+
+    // Save active tab to localStorage whenever it changes
+    useEffect(() => {
+        if (!activeTab) return;
+        
+        localStorage.setItem('adminActiveTab', activeTab);
+        
         const activeTabElement = document.querySelector('.tabs .tab.active');
         if (activeTabElement) {
-            activeTabElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            activeTabElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
     }, [activeTab]);
 
@@ -42,10 +55,24 @@ function AdminContent() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const renderContent = () => {
+        if (!activeTab) return null;
+        
+        switch (activeTab) {
+            case 'orders': return <OrderManager searchQuery={searchQuery} />;
+            case 'menu': return <MenuEditor />;
+            case 'categories': return <CategoryManager />;
+            case 'backups': return <BackupManager />;
+            case 'settings': return <GeneralSettings />;
+            default: return <OrderManager searchQuery={searchQuery} />;
+        }
+    };
+
     const getSearchPlaceholder = () => {
         switch(activeTab) {
-            case 'menu': return "Search items...";
-            case 'categories': return "Search categories...";
+            case 'menu': return t('admin_editor_search_placeholder');
+            case 'categories': return t('admin_categories_search_placeholder');
+            case 'orders': return t('admin_orders_search_placeholder');
             default: return "Search...";
         }
     };
@@ -66,8 +93,8 @@ function AdminContent() {
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
         
-        const tabs = ['menu', 'categories', 'backups', 'settings'];
-        const currentIndex = tabs.indexOf(activeTab);
+        const tabs = ['orders', 'menu', 'categories', 'backups', 'settings'];
+        const currentIndex = tabs.indexOf(activeTab!);
 
         if (isLeftSwipe) {
             // User requested: Swipe left -> Next menu
@@ -80,6 +107,17 @@ function AdminContent() {
         }
     };
 
+    // If activeTab is null, render a loading state
+    if (activeTab === null) {
+        return (
+            <div className="admin-container container-fluid" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+                <div style={{ padding: '40px', textAlign: 'center', fontSize: '1.2em', color: 'var(--text-color)' }}>
+                    {t('general_loading')}...
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div 
             className="admin-container container-fluid"
@@ -88,43 +126,28 @@ function AdminContent() {
             onTouchEnd={handleTouchEnd}
         >
             <div className="admin-header">
-                <h1>Admin Dashboard</h1>
+                <h1>{t('admin_dashboard')}</h1>
                 <div className="system-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button className="btn btn-refresh" onClick={refreshData} title="Refresh Data">
-                        Refresh
+                    <button className="btn btn-refresh" onClick={refreshData} title={t('general_refresh_btn')}>
+                        {t('general_refresh_btn')}
                     </button>
                 </div>
             </div>
 
             <div className="tabs">
-                <button 
-                    className={`tab ${activeTab === 'menu' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('menu')}
-                >
-                    Menu Editor
-                </button>
-                <button 
-                    className={`tab ${activeTab === 'categories' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('categories')}
-                >
-                    Categories
-                </button>
-                <button 
-                    className={`tab ${activeTab === 'backups' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('backups')}
-                >
-                    Backup & Restore
-                </button>
-                <button 
-                    className={`tab ${activeTab === 'settings' ? 'active' : ''}`} 
-                    onClick={() => setActiveTab('settings')}
-                >
-                    General Settings
-                </button>
+                {['orders', 'menu', 'categories', 'backups', 'settings'].map((tab) => (
+                    <button
+                        key={tab}
+                        className={`tab ${activeTab === tab ? 'active' : ''}`}
+                        onClick={() => setActiveTab(tab)}
+                    >
+                        {t(`admin_menu_${tab}` as any)}
+                    </button>
+                ))}
             </div>
 
             {/* Global Search Bar shown for supported tabs */}
-            {['menu', 'categories'].includes(activeTab) && (
+            {activeTab && ['menu', 'categories', 'orders'].includes(activeTab) && (
                 <div style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'var(--bg-color)', padding: '16px 0', borderBottom: '1px solid var(--border-color)', marginBottom: '16px' }}>
                     <div className="search-wrapper" style={{ display: 'flex', width: '100%' }}>
                         <input 
@@ -150,6 +173,7 @@ function AdminContent() {
                 {activeTab === 'categories' && <CategoryManager searchQuery={searchQuery} />}
                 {activeTab === 'backups' && <BackupManager />}
                 {activeTab === 'settings' && <GeneralSettings />}
+                {activeTab === 'orders' && <OrderManager searchQuery={searchQuery} />}
             </div>
 
             {/* Floating Action Buttons */}
@@ -168,7 +192,7 @@ function AdminContent() {
                     padding: '0 20px'
                 }}>
                     {/* Search Component container */}
-                    {['menu', 'categories'].includes(activeTab) && (
+                    {activeTab && ['menu', 'categories', 'orders'].includes(activeTab) && (
                         <div style={{ 
                             display: 'flex', 
                             alignItems: 'center', 

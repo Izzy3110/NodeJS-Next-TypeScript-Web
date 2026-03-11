@@ -22,107 +22,46 @@ export default function ImprintPage() {
     }, [router]);
 
     return (
-        <div className="imprint-container">
+        <div className="container" style={{ marginTop: '100px' }}>
             <style jsx global>{`
-                .imprint-container {
-                    padding: 2.5cm 1.5cm 2cm;
-                    font-family: 'minion-pro', serif;
-                    font-size: 12pt;
-                    line-height: 15pt;
-                    color: #000;
-                    background: #fff;
+                .imprint-page-content {
+                    font-family: 'Inter', sans-serif;
+                    color: var(--text-light);
                     max-width: 900px;
-                    margin: 20px auto;
-                    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                    position: relative;
+                    margin: 0 auto;
                 }
 
-                .back-button {
-                    position: absolute;
-                    top: 20px;
-                    left: 20px;
-                    padding: 8px 16px;
-                    background: #333;
-                    color: #fff;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-family: 'myriad-pro', sans-serif;
-                    font-size: 10pt;
-                    transition: background 0.2s;
-                    z-index: 10;
-                }
-
-                .back-button:hover {
-                    background: #111;
-                }
-
-                .imprint-container h1 {
-                    font-family: 'myriad-pro', sans-serif;
-                    font-size: 18pt;
-                    color: #000;
-                    font-weight: 700;
+                .imprint-page-content h1 {
+                    font-family: var(--font-heading);
+                    font-size: 2.5rem;
+                    color: var(--secondary-color);
                     text-align: center;
-                    line-height: normal;
-                    margin: 50px 0;
+                    margin-bottom: 2rem;
+                    border-bottom: 2px solid #333;
+                    padding-bottom: 0.5rem;
                 }
 
-                .imprint-container p {
+                .imprint-page-content p {
                     margin: 0 0 20px;
                 }
 
-                .imprint-container strong {
+                .imprint-page-content strong {
                     font-weight: bold;
+                    color: var(--secondary-color);
                 }
 
-                /* Header/Footer styles from original HTML */
-                .imprint-container .header, 
-                .imprint-container .footer, 
-                .imprint-container .firstHeader, 
-                .imprint-container .firstFooter {
-                    font-family: 'myriad-pro', sans-serif;
-                    font-size: 10pt;
-                    color: #bcbec0;
-                    position: relative;
-                    margin-bottom: 20px;
-                }
-
-                .imprint-container .footer, 
-                .imprint-container .firstFooter {
-                    margin-top: 50px;
-                    border-top: 1px solid #bcbec0;
-                    padding-top: 10px;
-                }
-
-                .imprint-container .pageNumbers {
-                    display: none; /* Hide page numbers in web view */
-                }
-
-                .imprint-container .copyright {
-                    font-size: 9pt;
-                    color: #bcbec0;
+                .imprint-page-content .copyright {
+                    font-size: 0.9rem;
+                    color: var(--text-muted);
                     display: block;
-                    margin-top: 20px;
-                }
-
-                @media print {
-                    .imprint-container {
-                        box-shadow: none;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .back-button {
-                        display: none;
-                    }
+                    margin-top: 40px;
+                    text-align: center;
                 }
             `}</style>
 
-            <button className="back-button" onClick={handleBack} title="Go Back (Esc)">
-                &lsaquo; Back
-            </button>
-
-            <div className="format-html">
+            <div className="imprint-page-content">
                 <div data-exp="simple2" className="outputVersion1 template_DE templated">
+
                     <div className="firstHeader">
                         <span className="content">Impressum für Website</span>
                     </div>
