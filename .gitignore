@@ -58,3 +58,9 @@ DONE.md
 2026-03-03_23-32-18.mp4
 venv/
 privkey
+cartids.txt
+category_16_prices.txt
+CURL_PDF_TEST.cmd
+CURL_PDF_TEST.ps1
+download_pdf.py
+pdf/
