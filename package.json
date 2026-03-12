@@ -22,6 +22,7 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@react-pdf/pdfkit": "^4.1.0",
     "@types/pdfkit": "^0.17.5",
     "archiver": "^7.0.1",
     "bootstrap": "^5.3.8",

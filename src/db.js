@@ -48,7 +48,8 @@ var pool = mariadb_1.default.createPool({
     user: 'dbuser',
     password: 'qwert',
     database: 'localdb',
-    connectionLimit: 5
+    connectionLimit: 5,
+    allowPublicKeyRetrieval: true
 });
 function getConnection() {
     return __awaiter(this, void 0, void 0, function () {

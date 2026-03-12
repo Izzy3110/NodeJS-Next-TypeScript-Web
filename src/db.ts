@@ -6,7 +6,8 @@ const pool = mariadb.createPool({
     user: process.env.DB_USER || 'dbuser',
     password: process.env.DB_PASSWORD || 'qwert',
     database: process.env.DB_NAME || 'localdb',
-    connectionLimit: 5
+    connectionLimit: 5,
+    allowPublicKeyRetrieval: true
 });
 
 export async function getConnection() {

@@ -110,6 +110,21 @@ export type TranslationKey =
   | "design_settings_hero_bg"
   | "design_settings_confirm_reset"
   | "category_pizza"
+  | "invoice_title"
+  | "invoice_order_date"
+  | "invoice_tel"
+  | "invoice_email"
+  | "invoice_col_count"
+  | "invoice_col_name"
+  | "invoice_col_category"
+  | "invoice_col_price"
+  | "invoice_subtotal"
+  | "invoice_tax_food"
+  | "invoice_tax_drinks"
+  | "invoice_delivery_costs"
+  | "invoice_total"
+  | "invoice_client_comments"
+  | "invoice_copy_to"
   | "general_loading";
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
@@ -223,7 +238,22 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     admin_settings_tax_category_food: "Food",
     admin_settings_tax_category_drinks: "Drinks",
     admin_settings_delivery_costs: "Delivery Costs",
-    admin_settings_delivery_costs_infotext: "Fixed delivery fee applied to each order in Euro."
+    admin_settings_delivery_costs_infotext: "Fixed delivery fee applied to each order in Euro.",
+    invoice_title: "INVOICE",
+    invoice_order_date: "Order Date:",
+    invoice_tel: "Tel.:",
+    invoice_email: "E-mail:",
+    invoice_col_count: "Count",
+    invoice_col_name: "Name",
+    invoice_col_category: "Category",
+    invoice_col_price: "Price",
+    invoice_subtotal: "Subtotal:",
+    invoice_tax_food: "Tax Food",
+    invoice_tax_drinks: "Tax Drinks",
+    invoice_delivery_costs: "Delivery Costs:",
+    invoice_total: "Total:",
+    invoice_client_comments: "Client Comments:",
+    invoice_copy_to: "Copy to:",
   },
   de: {
     nav_home: "Startseite",
@@ -334,6 +364,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     admin_settings_tax_category_food: "Essen",
     admin_settings_tax_category_drinks: "Getränke",
     admin_settings_delivery_costs: "Lieferkosten",
-    admin_settings_delivery_costs_infotext: "Feste Lieferkosten in Euro - angewendet auf jede Bestellung"
+    admin_settings_delivery_costs_infotext: "Feste Lieferkosten in Euro - angewendet auf jede Bestellung",
+    invoice_title: "RECHNUNG",
+    invoice_order_date: "Bestelldatum:",
+    invoice_tel: "Tel.:",
+    invoice_email: "E-Mail:",
+    invoice_col_count: "Anzahl",
+    invoice_col_name: "Name",
+    invoice_col_category: "Kategorie",
+    invoice_col_price: "Preis",
+    invoice_subtotal: "Zwischensumme:",
+    invoice_tax_food: "MwSt. Essen",
+    invoice_tax_drinks: "MwSt. Getränke",
+    invoice_delivery_costs: "Lieferkosten:",
+    invoice_total: "Gesamt:",
+    invoice_client_comments: "Anmerkungen:",
+    invoice_copy_to: "Kopie an:",
   },
 };
