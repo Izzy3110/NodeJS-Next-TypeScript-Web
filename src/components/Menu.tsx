@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Category, Item } from '@/types';
 import { preprocess_html, decode_entities } from '@/utils/stringUtils';
-
 import { useLanguage } from '@/context/LanguageContext';
+import PizzaMatrix from './PizzaMatrix';
 
 export default function Menu() {
     const [menuData, setMenuData] = useState<Category[]>([]);
@@ -50,7 +50,7 @@ export default function Menu() {
     }
 
     return (
-        <div className="container-fluid" id="menu">
+        <section className="container-fluid" id="menu">
             <div className="menu-search-container">
                 <input 
                     type="text" 
@@ -69,49 +69,56 @@ export default function Menu() {
                         {t('menu_no_results')}
                     </div>
                 ) : (
-                    filteredMenuData.map(category => (
-                        <div key={category.id} className="category-section">
-                            <h2 className="category-title" dangerouslySetInnerHTML={{ __html: preprocess_html(category.name) }}></h2>
-                            {category.description && (
-                                <p className="category-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(category.description) }}></p>
-                            )}
-                            <div className="pizza-grid">
-                                    {category.items?.map(item => {
-                                        // Category 4 = Pizza Normal (use price_s), Category 5 = Pizza Groß (use price_m)
-                                        const effectivePrice = item.category_id === 4 ? (item.price_s || 0) : 
-                                                             item.category_id === 5 ? (item.price_m || 0) : 
-                                                             (item.price || 0);
-                                        
-                                        return (
-                                            <div key={item.id} className="pizza-card">
-                                                {category.pic_url && (
-                                                    <img src={category.pic_url} alt={category.name} className="pizza-image" />
-                                                )}
-                                                <div className="pizza-content">
-                                                    <h3 className="pizza-title" dangerouslySetInnerHTML={{ __html: preprocess_html(item.name) }}></h3>
-                                                    {item.description && (
-                                                        <p className="pizza-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(item.description) }}></p>
+                    <>
+                        {(() => {
+                            let matrixRendered = false;
+                            
+                            return filteredMenuData.map(category => {
+                                const orderId = category.order_id;
+                                // If it's a pizza category (Order ID 4 or 5)
+                                if (orderId === 4 || orderId === 5) {
+                                    if (!matrixRendered) {
+                                        matrixRendered = true;
+                                        return <PizzaMatrix key="pizza-matrix" menuData={filteredMenuData} />;
+                                    }
+                                    return null;
+                                }
+
+                                // Default rendering for other categories
+                                return (
+                                    <div key={category.id} className="category-section">
+                                        <h2 className="category-title" dangerouslySetInnerHTML={{ __html: preprocess_html(category.name) }}></h2>
+                                        {category.description && (
+                                            <p className="category-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(category.description) }}></p>
+                                        )}
+                                        <div className="category-grid">
+                                            {category.items?.map(item => (
+                                                <div key={item.id} className="item-card">
+                                                    {category.pic_url && (
+                                                        <img src={category.pic_url} alt={category.name} className="pizza-image" />
                                                     )}
-                                                    <div className="pizza-footer">
-                                                        <span className="price">
-                                                            €{Number(effectivePrice).toFixed(2)}
-                                                        </span>
-                                                        <button 
-                                                            className="add-btn" 
-                                                            onClick={() => addToCart({ ...item, price: effectivePrice })}
-                                                        >
-                                                            {t('add_to_cart')}
-                                                        </button>
+                                                    <div className="item-content">
+                                                        <h3 className="item-title" dangerouslySetInnerHTML={{ __html: preprocess_html(item.name) }}></h3>
+                                                        {item.description && (
+                                                            <p className="item-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(item.description) }}></p>
+                                                        )}
+                                                        <div className="item-footer">
+                                                            <span className="item-price">
+                                                                €{Number(item.price).toFixed(2)}
+                                                            </span>
+                                                            <button className="add-btn" onClick={() => addToCart(item)}>{t('add_to_cart')}</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-                        </div>
-                    ))
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            });
+                        })()}
+                    </>
                 )}
             </div>
-        </div>
+        </section>
     );
 }

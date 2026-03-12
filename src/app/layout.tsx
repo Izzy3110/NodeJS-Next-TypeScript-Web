@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
 import "./globals.scss";
 import { CartProvider } from "@/context/CartContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -22,10 +23,27 @@ export default function RootLayout({
         <head>
             {/* Critical Inline CSS to prevent FOUC / Shaking */}
             <style dangerouslySetInnerHTML={{ __html: `
+                ${(() => {
+                    try {
+                        const fs = require('fs');
+                        const path = require('path');
+                        const themePath = path.join(process.cwd(), 'src/data/theme.json');
+                        const themeContent = fs.readFileSync(themePath, 'utf-8');
+                        const variables = JSON.parse(themeContent);
+                        let css = ':root {\n';
+                        for (const [key, value] of Object.entries(variables)) {
+                            css += `  ${key}: ${value} !important;\n`;
+                        }
+                        css += '}';
+                        return css;
+                    } catch (e) {
+                        return '';
+                    }
+                })()}
+
                 html, body { 
                     margin: 0; 
-                    background-color: #1a1a1a; 
-                    overflow: hidden;
+                    background-color: var(--background-dark); 
                     height: 100%;
                 }
                 .page-loader-overlay {

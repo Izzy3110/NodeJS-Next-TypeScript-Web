@@ -1,0 +1,22 @@
+{
+  "--primary-color": "#ff6b6b",
+  "--secondary-color": "#4ecdc4",
+  "--background-dark": "#1a1a1a",
+  "--text-light": "#f7f7f7",
+  "--text-muted": "#a0a0a0",
+  "--card-bg": "#2d2d2d",
+  "--font-heading": "\"Poppins\", sans-serif",
+  "--font-body": "\"Inter\", sans-serif",
+  "--matrix-price-color": "#ffffff",
+  "--matrix-desc-color": "#888888",
+  "--matrix-name-color": "#ffffff",
+  "--matrix-header-text-color": "#ffffff",
+  "--matrix-btn-color": "#ff6b6b",
+  "--matrix-btn-hover-color": "#3bb8af",
+  "--item-title-color": "#ffffff",
+  "--item-price-color": "#4ecdc4",
+  "--item-desc-color": "#888888",
+  "--add-btn-hover-color": "#3bb8af",
+  "--category-title-color": "#ffffff",
+  "--hero-bg-image": "none"
+}

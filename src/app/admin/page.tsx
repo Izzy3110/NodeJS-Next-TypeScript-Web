@@ -8,6 +8,7 @@ import CategoryManager from '@/components/admin/CategoryManager';
 import BackupManager from '@/components/admin/BackupManager';
 import GeneralSettings from '@/components/admin/GeneralSettings';
 import OrderManager from '@/components/admin/OrderManager';
+import DesignSettings from '@/components/admin/DesignSettings';
 
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -64,6 +65,7 @@ function AdminContent() {
             case 'categories': return <CategoryManager />;
             case 'backups': return <BackupManager />;
             case 'settings': return <GeneralSettings />;
+            case 'design': return <DesignSettings />;
             default: return <OrderManager searchQuery={searchQuery} />;
         }
     };
@@ -93,7 +95,7 @@ function AdminContent() {
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
         
-        const tabs = ['orders', 'menu', 'categories', 'backups', 'settings'];
+        const tabs = ['orders', 'menu', 'categories', 'backups', 'settings', 'design'];
         const currentIndex = tabs.indexOf(activeTab!);
 
         if (isLeftSwipe) {
@@ -135,7 +137,7 @@ function AdminContent() {
             </div>
 
             <div className="tabs">
-                {['orders', 'menu', 'categories', 'backups', 'settings'].map((tab) => (
+                {['orders', 'menu', 'categories', 'backups', 'settings', 'design'].map((tab) => (
                     <button
                         key={tab}
                         className={`tab ${activeTab === tab ? 'active' : ''}`}
@@ -173,6 +175,7 @@ function AdminContent() {
                 {activeTab === 'categories' && <CategoryManager searchQuery={searchQuery} />}
                 {activeTab === 'backups' && <BackupManager />}
                 {activeTab === 'settings' && <GeneralSettings />}
+                {activeTab === 'design' && <DesignSettings />}
                 {activeTab === 'orders' && <OrderManager searchQuery={searchQuery} />}
             </div>
 

@@ -14,8 +14,18 @@
   --text-light: #f7f7f7;
   --text-muted: #a0a0a0;
   --card-bg: #2d2d2d;
-  --font-heading: "Poppins", sans-serif;
   --font-body: "Inter", sans-serif;
+  --matrix-price-color: #ffffff;
+  --matrix-desc-color: #888888;
+  --matrix-name-color: #ffffff;
+  --matrix-header-text-color: #ffffff;
+  --matrix-btn-color: #ff6b6b;
+  --matrix-btn-hover-color: #3bb8af;
+  --item-title-color: #ffffff;
+  --item-price-color: #4ecdc4;
+  --item-desc-color: #888888;
+  --add-btn-hover-color: #3bb8af;
+  --category-title-color: #ffffff;
 }
 
 [data-theme="light"] {
@@ -141,14 +151,17 @@ header {
 }
 
 .hero {
-  height: 90vh;
+  min-height: 100vh;
   /* Background moved to body for global parallax */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: 80px;
+  padding-top: 80px;
   flex-direction: column;
+  background-image: var(--hero-bg-image);
+  background-size: cover;
+  background-position: center;
 }
 
 .hero h2 {
@@ -163,23 +176,26 @@ header {
   font-size: 1.2rem;
   color: var(--text-light);
   margin-bottom: 2rem;
+  text-shadow: 2px 2px 8px black;
 }
 
 .btn {
-  background-color: var(--primary-color);
-  color: white;
+  display: inline-block;
+  background-color: var(--primary-color) !important;
+  color: white !important;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  text-shadow: 1px 0px 3px black;
   text-decoration: none;
   transition: background-color 0.3s;
   font-size: 1rem;
 }
 
 .btn:hover {
-  background-color: #ff5252;
+  background-color: var(--add-btn-hover-color) !important;
 }
 
 .container-fluid {
@@ -225,6 +241,7 @@ header {
   border-bottom: 2px solid #333;
   padding-bottom: 0.5rem;
   text-align: center;
+  text-shadow: 3px -1px 0px #55555559;
 }
 
 .menu-search-container {
@@ -283,9 +300,10 @@ header {
   font-family: var(--font-heading);
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: var(--text-light);
+  color: var(--category-title-color);
   border-bottom: 1px solid #333;
   padding-bottom: 0.5rem;
+  text-shadow: 5px 2px 16px black;
 }
 
 .category-desc {
@@ -294,45 +312,54 @@ header {
   white-space: pre-wrap;
 }
 
-.pizza-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+.category-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.pizza-card {
+.item-card {
+  display: flex;
+  flex-direction: row;
   background-color: var(--card-bg);
   border-radius: 12px;
   overflow: hidden;
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
+  min-height: 180px;
 
-.pizza-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .pizza-image {
-  width: 100%;
-  height: 200px;
+  width: 300px;
+  min-width: 300px;
+  height: auto;
   object-fit: cover;
 }
 
-.pizza-content {
+.item-content {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
 }
 
-.pizza-title {
+.item-title {
   font-family: var(--font-heading);
+  color: var(--item-title-color);
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
+  padding-right: 80px; /* Space for absolute price */
+  text-shadow: 2px 1px 2px black;
 }
 
-.pizza-desc {
-  color: var(--text-muted);
+.item-desc {
+  color: var(--item-desc-color);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
   line-height: 1.4;
@@ -340,17 +367,21 @@ header {
   white-space: pre-wrap;
 }
 
-.pizza-footer {
+.item-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Align button to the right */
   align-items: center;
   margin-top: auto;
 }
 
-.price {
-  font-size: 1.2rem;
+.item-price {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: var(--secondary-color);
+  color: var(--item-price-color);
+  text-shadow: 0 0 10px black;
 }
 
 .add-btn {
@@ -361,11 +392,12 @@ header {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  text-shadow: 1px 1px 4px black;
   transition: background-color 0.3s;
 }
 
 .add-btn:hover {
-  background-color: #ff5252;
+  background-color: var(--add-btn-hover-color);
 }
 
 /* Cart Modal */
@@ -387,6 +419,25 @@ header {
 
 .cart-modal.open {
   right: 0;
+}
+
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.cart-overlay.open {
+  opacity: 1;
+  visibility: visible;
 }
 
 .cart-header {
@@ -672,4 +723,115 @@ input[type="text"] {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Pizza Matrix Styles */
+.pizza-matrix-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 3rem;
+}
+
+.pizza-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-light);
+  min-width: 600px;
+
+  th {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #444;
+    color: var(--matrix-header-text-color);
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+  }
+
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .pizza-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--matrix-name-color);
+  }
+
+  .pizza-desc {
+    font-size: 0.85rem;
+    color: var(--matrix-desc-color);
+    line-height: 1.4;
+  }
+
+  .pizza-matrix-price-cell {
+    text-align: center;
+    width: 120px;
+    background-color: rgba(255,255,255,0.02);
+  }
+
+  .pizza-matrix-price {
+    font-weight: 700;
+    color: var(--matrix-price-color);
+    margin-bottom: 0.5rem;
+    display: block;
+    font-size: 1.1rem;
+  }
+
+  .pizza-matrix-price-cell.matrix-price-size-header {
+    min-width: 12vw;
+  }
+
+  .matrix-price-size-header {
+    color: var(--matrix-header-text-color) !important;
+  }
+
+  .pizza-matrix-price-cell .add-btn {
+    background-color: var(--matrix-btn-color);
+  }
+
+  .pizza-matrix-price-cell .add-btn:hover {
+    background-color: var(--matrix-btn-hover-color);
+  }
+}
+
+@media (max-width: 992px) {
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .item-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .pizza-image {
+    width: 100%;
+    min-width: 0;
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+    .pizza-matrix-table {
+        th:nth-child(2), td:nth-child(2) {
+            display: none; /* Hide description on mobile */
+        }
+        .pizza-matrix-price-cell {
+            width: 100px;
+        }
+    }
 }

@@ -30,10 +30,11 @@ export async function getMenu(): Promise<Category[]> {
     try {
         conn = await pool.getConnection();
         const categories = await conn.query("SELECT * FROM itemcats ORDER BY order_id");
-        const items = await conn.query("SELECT * FROM items");
+        const items = await conn.query("SELECT * FROM items ORDER BY id ASC");
 
         const menu: Category[] = categories.map((cat: any) => ({
             id: cat.id,
+            order_id: cat.order_id,
             name: cat.name,
             description: cat.description,
             additional_text: cat.additional_text,

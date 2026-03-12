@@ -85,7 +85,12 @@ export default function Cart() {
     };
 
     return (
-        <div className={`cart-modal ${isCartOpen ? 'open' : ''}`} id="cart-modal">
+        <>
+            <div 
+                className={`cart-overlay ${isCartOpen ? 'open' : ''}`} 
+                onClick={toggleCart}
+            />
+            <div className={`cart-modal ${isCartOpen ? 'open' : ''}`} id="cart-modal">
             <div className="cart-header">
                 <h3>{step === 'cart' ? t('cart_title') : t('cart_finalize_title')}</h3>
                 <button className="close-cart" onClick={toggleCart}>&times;</button>
@@ -196,5 +201,6 @@ export default function Cart() {
                 </>
             )}
         </div>
+        </>
     );
 }

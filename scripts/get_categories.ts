@@ -12,15 +12,15 @@ async function getCategories() {
     let conn;
     try {
         conn = await pool.getConnection();
-        const categories = await conn.query("SELECT id, name FROM itemcats ORDER BY id ASC");
+        const categories = await conn.query("SELECT id, name, order_id FROM itemcats ORDER BY order_id ASC");
         
         // Print table header
-        console.log("ID\tCategory.Name");
+        console.log("ID\torder_id\tCategory.Name");
         console.log("-------------------------------");
         
         // Print rows
         for (const cat of categories) {
-            console.log(`${cat.id}\t${cat.name}`);
+            console.log(`${cat.id}\t${cat.order_id}\t${cat.name}`);
         }
         
     } catch (err) {
