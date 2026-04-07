@@ -27,7 +27,7 @@ export default function RootLayout({
                     try {
                         const fs = require('fs');
                         const path = require('path');
-                        const themePath = path.join(process.cwd(), 'src/data/theme.json');
+                        const themePath = path.join(process.cwd(), 'data/theme.json');
                         const themeContent = fs.readFileSync(themePath, 'utf-8');
                         const variables = JSON.parse(themeContent);
                         let css = ':root {\n';

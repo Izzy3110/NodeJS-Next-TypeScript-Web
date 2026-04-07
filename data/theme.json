@@ -14,7 +14,7 @@
   "--matrix-btn-color": "linear-gradient(45deg, #FF512F 0%, #F09819 100%)",
   "--matrix-btn-hover-color": "linear-gradient(135deg,#a8ceff 0%, #2a5298 100%)",
   "--item-title-color": "#ffffff",
-  "--item-price-color": "linear-gradient(135deg,#a8ceff 0%, #2a5298 100%)",
+  "--item-price-color": "#FFFFFF",
   "--item-desc-color": "#888888",
   "--add-btn-hover-color": "linear-gradient(135deg,#a8ceff 0%, #2a5298 100%)",
   "--category-title-color": "#ffffff",

@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { revalidatePath } from 'next/cache';
 
-const CONFIG_PATH = path.join(process.cwd(), 'src/data/theme.json');
+const CONFIG_PATH = path.join(process.cwd(), 'data/theme.json');
 
 export async function GET(req: Request) {
     try {

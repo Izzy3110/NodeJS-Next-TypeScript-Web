@@ -205,7 +205,7 @@ export default function DesignSettings() {
         return (
             <div key={key} className="col-md-6 mb-3">
                 <label className="form-label d-flex justify-content-between align-items-center">
-                    <span className="fw-bold" style={TextShadowOrNot(value)}>
+                    <span className="fw-bold">
                         {label} <small className="text-muted fw-normal ms-1">({key})</small>
                     </span>
                     {isColor && (
