@@ -168,6 +168,14 @@ export default function BackupManager() {
                                     <td style={{ textAlign: 'center' }}>
                                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', whiteSpace: 'nowrap' }}>
                                             <button className="btn btn-save" style={{ backgroundColor: '#4a90e2', padding: '6px 12px' }} onClick={() => restoreBackup(f.filename)}>Restore</button>
+                                            <a 
+                                                href={`/api/admin/backup-file/${f.filename}`} 
+                                                className="btn btn-save" 
+                                                style={{ backgroundColor: '#f59e0b', padding: '6px 12px', textDecoration: 'none' }}
+                                                download
+                                            >
+                                                Download
+                                            </a>
                                             <button className="btn btn-restore" style={{ padding: '6px 12px' }} onClick={() => deleteBackup(f.filename)}>Delete</button>
                                         </div>
                                     </td>

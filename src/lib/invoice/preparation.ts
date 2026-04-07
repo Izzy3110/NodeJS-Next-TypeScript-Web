@@ -139,14 +139,14 @@ export async function prepareInvoiceData(itemIds: number[]) {
       items: processedItems,
       summary: {
         client: {
-          name: "Test-Kunde GmbH",
-          email: "mocked@pizzaservice-illmensee.de",
-          tel: ["+49 123 4567890"],
+          name: "",
+          email: "",
+          tel: [],
           address: {
-            client_address_line_1: "Industriepark 12",
-            client_address_line_2: "Halle 4",
-            client_address_plz: 70173,
-            client_address_city: "Stuttgart",
+            client_address_line_1: "",
+            client_address_line_2: "",
+            client_address_plz: 0,
+            client_address_city: "",
           },
         },
         sum_elements: Math.round(sum_elements * 100) / 100,

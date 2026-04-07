@@ -11,18 +11,26 @@ export default function Cart() {
     const [step, setStep] = useState<'cart' | 'finalize'>('cart');
     
     // Finalize form states
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
+    const [addressLine1, setAddressLine1] = useState('');
+    const [addressPLZ, setAddressPLZ] = useState('');
+    const [addressCity, setAddressCity] = useState('');
     const [isConfirmed, setIsConfirmed] = useState(false);
     
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     // Reset step when cart opens/closes
     useEffect(() => {
         if (!isCartOpen) {
             setStep('cart');
+            setName('');
             setEmail('');
-            setAddress('');
+            setPhone('');
+            setAddressLine1('');
+            setAddressPLZ('');
+            setAddressCity('');
             setIsConfirmed(false);
         }
     }, [isCartOpen]);
@@ -36,7 +44,7 @@ export default function Cart() {
     };
 
     const handleCheckout = async () => {
-        if (!email.trim() || !address.trim() || !email.includes('@')) {
+        if (!name.trim() || !email.trim() || !phone.trim() || !addressLine1.trim() || !addressPLZ.trim() || !addressCity.trim() || !email.includes('@')) {
             alert(t('cart_finalize_alert'));
             return;
         }
@@ -49,29 +57,40 @@ export default function Cart() {
             return;
         }
 
+        // The API /api/submit_order expects a flat array of itemIds (duplicates for quantity)
+        const itemIds = cart.flatMap(item => Array(item.quantity).fill(item.id));
+
         const orderData = {
-            email: email.trim(),
-            address: address.trim(),
-            items: cart.map(item => ({ 
-                itemId: item.id, 
-                name: item.name, 
-                quantity: item.quantity, 
-                price: item.price 
-            }))
+            itemIds,
+            lang: language,
+            client: {
+                name: name.trim(),
+                email: email.trim(),
+                tel: [phone.trim()],
+                address: {
+                    client_address_line_1: addressLine1.trim(),
+                    client_address_plz: addressPLZ.trim(),
+                    client_address_city: addressCity.trim()
+                }
+            }
         };
 
         try {
-            const res = await fetch('/api/orders', {
+            const res = await fetch('/api/submit_order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             });
 
             if (res.ok) {
-                alert(t('cart_order_success') + ' ' + email + '!');
+                alert(t('cart_order_success') + ' ' + name + '!');
                 clearCart();
+                setName('');
                 setEmail('');
-                setAddress('');
+                setPhone('');
+                setAddressLine1('');
+                setAddressPLZ('');
+                setAddressCity('');
                 setIsConfirmed(false);
                 setStep('cart');
                 toggleCart();
@@ -145,6 +164,28 @@ export default function Cart() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                             <div>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_name_label')}</label>
+                                <input 
+                                    type="text" 
+                                    placeholder={t('cart_name_placeholder')} 
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)' }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_phone_label')}</label>
+                                <input 
+                                    type="tel" 
+                                    placeholder="+49 123 4567890" 
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)' }}
+                                />
+                            </div>
+
+                            <div>
                                 <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_email_label')}</label>
                                 <input 
                                     type="email" 
@@ -156,14 +197,37 @@ export default function Cart() {
                             </div>
                             
                             <div>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_address_label')}</label>
-                                <textarea 
-                                    placeholder="Ihre Adresse..." 
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    rows={3}
-                                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)', resize: 'vertical' }}
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_street_label')}</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Musterstr. 12" 
+                                    value={addressLine1}
+                                    onChange={(e) => setAddressLine1(e.target.value)}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)' }}
                                 />
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_plz_label')}</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="12345" 
+                                        value={addressPLZ}
+                                        onChange={(e) => setAddressPLZ(e.target.value)}
+                                        style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)' }}
+                                    />
+                                </div>
+                                <div style={{ flex: 2 }}>
+                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>{t('cart_city_label')}</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Pfullendorf" 
+                                        value={addressCity}
+                                        onChange={(e) => setAddressCity(e.target.value)}
+                                        style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--border-color)' }}
+                                    />
+                                </div>
                             </div>
 
                             <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '14px', cursor: 'pointer', marginTop: '10px' }}>
@@ -192,7 +256,7 @@ export default function Cart() {
                                 className="btn" 
                                 style={{ flex: 2, backgroundColor: 'var(--primary-color)' }}
                                 onClick={handleCheckout}
-                                disabled={!isConfirmed || !email || !address}
+                                disabled={!isConfirmed || !email || !addressLine1 || !name || !addressPLZ || !addressCity || !phone}
                             >
                                 {t('cart_order_now')}
                             </button>

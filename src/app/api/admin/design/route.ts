@@ -5,9 +5,22 @@ import { revalidatePath } from 'next/cache';
 
 const CONFIG_PATH = path.join(process.cwd(), 'src/data/theme.json');
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
+        const download = searchParams.get('download');
+
         const content = await fs.readFile(CONFIG_PATH, 'utf-8');
+        
+        if (download === 'true') {
+            return new NextResponse(content, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Disposition': 'attachment; filename="theme.json"',
+                }
+            });
+        }
+
         const variables = JSON.parse(content);
         return NextResponse.json(variables);
     } catch (error: any) {

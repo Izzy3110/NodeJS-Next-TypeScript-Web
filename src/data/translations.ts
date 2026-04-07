@@ -32,6 +32,11 @@ export type TranslationKey =
   | "cart_finalize_title"
   | "cart_summary_title"
   | "cart_email_label"
+  | "cart_phone_label"
+  | "cart_name_label"
+  | "cart_street_label"
+  | "cart_plz_label"
+  | "cart_city_label"
   | "cart_address_label"
   | "cart_confirm_label"
   | "cart_back"
@@ -160,7 +165,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     cart_finalize_title: "Complete Order",
     cart_summary_title: "Cart Summary",
     cart_email_label: "Email Address *",
-    cart_address_label: "Postal Address *",
+    cart_phone_label: "Phone Number (International) *",
+    cart_name_label: "Full Name *",
+    cart_street_label: "Street & No. *",
+    cart_plz_label: "Postal Code (PLZ) *",
+    cart_city_label: "City *",
+    cart_address_label: "Combined Address",
     cart_confirm_label: "Confirm correctness of the address and place order",
     cart_back: "Back",
     cart_order_now: "Order Now!",
@@ -287,7 +297,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     cart_finalize_title: "Bestellung Abschließen",
     cart_summary_title: "Warenkorb Übersicht",
     cart_email_label: "E-Mail Adresse *",
-    cart_address_label: "Postanschrift *",
+    cart_phone_label: "Telefonnummer (International) *",
+    cart_name_label: "Vollständiger Name *",
+    cart_street_label: "Straße & Hausnr. *",
+    cart_plz_label: "PLZ *",
+    cart_city_label: "Ort *",
+    cart_address_label: "Anschrift *",
     cart_confirm_label: "Richtigkeit der Adresse überprüft und verbindlich bestellen",
     cart_back: "Zurück",
     cart_order_now: "Jetzt Bestellen!",

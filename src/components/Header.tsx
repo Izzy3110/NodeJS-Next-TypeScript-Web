@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
@@ -11,6 +11,18 @@ export default function Header() {
     const { cartCount, toggleCart } = useCart();
     const { theme, toggleTheme } = useTheme();
     const { language, setLanguage, t } = useLanguage();
+
+    const [isPulsating, setIsPulsating] = useState(false);
+    const [prevCount, setPrevCount] = useState(cartCount);
+
+    useEffect(() => {
+        if (cartCount > prevCount) {
+            setIsPulsating(true);
+            const timer = setTimeout(() => setIsPulsating(false), 400);
+            return () => clearTimeout(timer);
+        }
+        setPrevCount(cartCount);
+    }, [cartCount, prevCount]);
 
     const toggleLanguage = () => {
         setLanguage(language === 'en' ? 'de' : 'en');
@@ -86,7 +98,7 @@ export default function Header() {
                     </div>
                     <button 
                         onClick={toggleCart} 
-                        className="nav-item cart-btn" 
+                        className={`nav-item cart-btn ${isPulsating ? 'pulsate' : ''}`} 
                         style={{ background: 'none', border: 'none', fontSize: '1.8rem', fontFamily: 'inherit', position: 'relative' }}
                     >
                         <i className="fa-solid fa-cart-shopping"></i>

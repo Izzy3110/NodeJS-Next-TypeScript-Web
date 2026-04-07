@@ -54,24 +54,62 @@ export async function getMenu(): Promise<Category[]> {
     }
 }
 
-export async function createOrder(email: string, address: string, items: any[], total: number) {
+export async function createOrder(orderData: {
+    email: string,
+    client_name?: string,
+    client_phone?: string,
+    address: string,
+    address_line_1?: string,
+    address_line_2?: string,
+    address_plz?: string | number,
+    address_city?: string,
+    items: any[],
+    lang?: string,
+    total_price: number,
+    tax_total: number,
+    delivery_costs: number,
+    pdf_path?: string
+}) {
     let conn;
     try {
         conn = await pool.getConnection();
         
         // Extract item IDs. If quantity is specified, we duplicate the ID for each quantity.
+        const items = orderData.items;
         const itemIdsArray = items.flatMap(item => Array(item.quantity || 1).fill(item.itemId || item.id));
         const itemIdsStr = itemIdsArray.join(',');
 
-        const timestamp = Math.floor(Date.now() / 1000); // int(255) timestamp
+        const timestamp = Math.floor(Date.now() / 1000);
 
-        // Insert including the new mail and client_address fields
-        const res = await conn.query(
-            "INSERT INTO orders (ItemIDs, order_text, timestamp, mail, client_address) VALUES (?, ?, ?, ?, ?)",
-            [itemIdsStr, "", timestamp, email, address]
-        );
+        const query = `
+            INSERT INTO orders (
+                ItemIDs, order_text, timestamp, mail, client_name, client_phone, 
+                client_address, address_line_1, address_line_2, address_plz, address_city, 
+                lang, total_price, tax_total, delivery_costs, pdf_path, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-        return { id: Number(res.insertId), email, address, total };
+        const res = await conn.query(query, [
+            itemIdsStr, 
+            "", 
+            timestamp, 
+            orderData.email, 
+            orderData.client_name || null,
+            orderData.client_phone || null,
+            orderData.address,
+            orderData.address_line_1 || null,
+            orderData.address_line_2 || null,
+            orderData.address_plz || null,
+            orderData.address_city || null,
+            orderData.lang || 'de',
+            orderData.total_price,
+            orderData.tax_total,
+            orderData.delivery_costs,
+            orderData.pdf_path || null,
+            'pending'
+        ]);
+
+        return { id: Number(res.insertId), ...orderData };
     } catch (err) {
         console.error("Error creating order:", err);
         throw err;

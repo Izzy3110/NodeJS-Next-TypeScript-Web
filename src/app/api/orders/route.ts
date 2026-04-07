@@ -26,7 +26,14 @@ export async function POST(request: Request) {
         // Calculate total (placeholder as per original code)
         const total = 0; 
 
-        const order = await createOrder(email, address, items, total);
+        const order = await createOrder({
+            email,
+            address,
+            items,
+            total_price: total,
+            tax_total: 0,
+            delivery_costs: 0
+        });
         return NextResponse.json(order, { status: 201 });
     } catch (err: any) {
         console.error("Order creation failed:", err);

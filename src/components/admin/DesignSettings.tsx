@@ -105,17 +105,8 @@ export default function DesignSettings() {
     };
     
     const handleDownload = () => {
-        const data = JSON.stringify(variables, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'theme.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        showToast("theme.json heruntergeladen!", 'success');
+        window.location.href = '/api/admin/design?download=true';
+        showToast("theme.json wird heruntergeladen...", 'success');
     };
 
     const handleRestoreText = () => {
