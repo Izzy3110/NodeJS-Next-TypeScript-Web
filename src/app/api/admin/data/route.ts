@@ -7,7 +7,17 @@ export async function GET() {
         conn = await pool.getConnection();
         const rawItems = await conn.query("SELECT * FROM items ORDER BY category_id");
         const categories = await conn.query("SELECT * FROM itemcats ORDER BY order_id");
-        const zutaten = await conn.query("SELECT * FROM pizza_zutaten");
+        const zutatenRows = await conn.query(`
+            SELECT z.*, p.price_per_good 
+            FROM pizza_zutaten z 
+            LEFT JOIN pizza_zutaten_preise p ON z.id = p.id
+        `);
+        
+        const zutaten = zutatenRows.map((z: any) => ({
+            id: z.id,
+            name: z.name,
+            good_price: z.price_per_good ? parseFloat(z.price_per_good.replace(',', '.')) : 0.00
+        }));
         
         const items = rawItems.map((item: any) => mapItemRow(item));
         

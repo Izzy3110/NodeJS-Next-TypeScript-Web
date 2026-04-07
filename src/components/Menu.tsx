@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
-import { Category, Item } from '@/types';
+import { Category } from '@/types';
 import { preprocess_html, decode_entities } from '@/utils/stringUtils';
 import { useLanguage } from '@/context/LanguageContext';
 import PizzaMatrix from './PizzaMatrix';
+import { useTheme } from '@/context/ThemeContext';
+import { TextShadowOrNot } from '@/utils/styleUtils';
 
 export default function Menu() {
     const [menuData, setMenuData] = useState<Category[]>([]);
@@ -12,6 +14,9 @@ export default function Menu() {
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
     const { t } = useLanguage();
+    const { designSettings } = useTheme();
+
+    const priceColor = designSettings['--item-price-color'] || '#ffffff';
 
     useEffect(() => {
         fetch('/api/menu')
@@ -61,7 +66,12 @@ export default function Menu() {
                 />
             </div>
 
-            <h2 className="section-title">{t('section_menu')}</h2>
+            <h2 
+                className="section-title" 
+                style={TextShadowOrNot(designSettings['--secondary-color'] || '#ffffff')}
+            >
+                {t('section_menu')}
+            </h2>
             
             <div className="menu-grid">
                 {filteredMenuData.length === 0 ? (
@@ -87,7 +97,11 @@ export default function Menu() {
                                 // Default rendering for other categories
                                 return (
                                     <div key={category.id} className="category-section">
-                                        <h2 className="category-title" dangerouslySetInnerHTML={{ __html: preprocess_html(category.name) }}></h2>
+                                        <h2 
+                                            className="category-title" 
+                                            style={TextShadowOrNot(designSettings['--category-title-color'] || '#ffffff')}
+                                            dangerouslySetInnerHTML={{ __html: preprocess_html(category.name) }}
+                                        ></h2>
                                         {category.description && (
                                             <p className="category-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(category.description) }}></p>
                                         )}
@@ -103,7 +117,7 @@ export default function Menu() {
                                                             <p className="item-desc" dangerouslySetInnerHTML={{ __html: preprocess_html(item.description) }}></p>
                                                         )}
                                                         <div className="item-footer">
-                                                            <span className="item-price">
+                                                            <span className="item-price" style={TextShadowOrNot(priceColor)}>
                                                                 €{Number(item.price).toFixed(2)}
                                                             </span>
                                                             <button className="add-btn" onClick={() => addToCart(item)}>{t('add_to_cart')}</button>

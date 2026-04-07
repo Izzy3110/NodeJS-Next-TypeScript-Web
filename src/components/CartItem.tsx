@@ -12,7 +12,13 @@ interface CartItemProps {
     t: (key: TranslationKey) => string;
 }
 
+import { useTheme } from '@/context/ThemeContext';
+import { TextShadowOrNot } from '@/utils/styleUtils';
+
 export default function CartItem({ item, onRemoveOne, onRemoveAll, t }: CartItemProps) {
+    const { designSettings } = useTheme();
+    const priceColor = designSettings['--item-price-color'] || '#ffffff';
+
     return (
         <div className="cart-item-container">
             <div className="removal-panel">
@@ -37,7 +43,7 @@ export default function CartItem({ item, onRemoveOne, onRemoveAll, t }: CartItem
             <div className="item-details">
                 <span className="item-count">{item.quantity}x</span>
                 <span className="item-name" dangerouslySetInnerHTML={{ __html: preprocess_html(item.name) }}></span>
-                <span className="item-price">
+                <span className="item-price" style={TextShadowOrNot(priceColor)}>
                     €{(Number(item.price) * item.quantity).toFixed(2)}
                 </span>
             </div>

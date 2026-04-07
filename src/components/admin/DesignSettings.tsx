@@ -3,29 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import { useLanguage } from '@/context/LanguageContext';
+import themeData from '@/app/theme.json';
+import { TextShadowOrNot, isHexColor } from '@/utils/styleUtils';
 
-const DEFAULT_THEME = {
-  "--primary-color": "#ff6b6b",
-  "--secondary-color": "#4ecdc4",
-  "--background-dark": "#1a1a1a",
-  "--text-light": "#f7f7f7",
-  "--text-muted": "#a0a0a0",
-  "--card-bg": "#2d2d2d",
-  "--font-heading": "\"Poppins\", sans-serif",
-  "--font-body": "\"Inter\", sans-serif",
-  "--matrix-price-color": "#ffffff",
-  "--matrix-desc-color": "#888888",
-  "--matrix-name-color": "#ffffff",
-  "--matrix-header-text-color": "#ffffff",
-  "--matrix-btn-color": "#ff6b6b",
-  "--matrix-btn-hover-color": "#3bb8af",
-  "--item-title-color": "#ffffff",
-  "--item-price-color": "#4ecdc4",
-  "--item-desc-color": "#888888",
-  "--add-btn-hover-color": "#3bb8af",
-  "--category-title-color": "#ffffff",
-  "--hero-bg-image": "none"
-};
+const DEFAULT_THEME = themeData;
 
 export default function DesignSettings() {
     const { t } = useLanguage();
@@ -48,14 +29,20 @@ export default function DesignSettings() {
         });
     }, [variables]);
 
+
+
+
     const fetchVars = async () => {
         setLoading(true);
         try {
             const res = await fetch('/api/admin/design');
             if (!res.ok) throw new Error("Failed to fetch design settings");
             const data = await res.json();
-            setVariables(data);
-            setOriginalVariables(data);
+            
+            // Merge defaults with saved data so any new keys appear immediately
+            const merged = { ...DEFAULT_THEME, ...data };
+            setVariables(merged);
+            setOriginalVariables(merged);
         } catch (error: any) {
             showToast(error.message, 'error');
         } finally {
@@ -87,6 +74,27 @@ export default function DesignSettings() {
             setSaving(false);
         }
     };
+
+    // Keyboard Shortcuts (Ctrl+S)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                const hasChanges = JSON.stringify(variables) !== JSON.stringify(originalVariables);
+                
+                if (saving) return;
+
+                if (hasChanges) {
+                    handleSave();
+                } else {
+                    showToast("Keine Änderungen zum Speichern vorhanden");
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [variables, originalVariables, saving, handleSave, showToast]);
 
     const handleReset = () => {
         if (window.confirm(t('design_settings_confirm_reset') || "Möchten Sie alle Einstellungen auf die Standardwerte zurücksetzen?")) {
@@ -144,7 +152,9 @@ export default function DesignSettings() {
     };
 
     const renderVariable = (key: string, value: string) => {
-        const isColor = value.startsWith('#') || value.startsWith('rgb');
+        const trimmedValue = value.trim();
+        const isGradient = trimmedValue.startsWith('linear-gradient') || trimmedValue.startsWith('radial-gradient');
+        const isColor = trimmedValue.startsWith('#') || trimmedValue.startsWith('rgb') || isGradient;
         const translationKeys: Record<string, string> = {
             '--primary-color': 'design_settings_primary_color',
             '--secondary-color': 'design_settings_secondary_color',
@@ -175,7 +185,7 @@ export default function DesignSettings() {
                     <div className="form-check form-switch p-0 d-flex align-items-center gap-3" style={{ minHeight: '3rem', cursor: 'pointer' }}>
                         <div className="flex-grow-1">
                             <label className="form-check-label fw-bold h5 mb-0" htmlFor="hero-bg-toggle" style={{ cursor: 'pointer' }}>
-                                {label}
+                                {label} <small className="text-muted fw-normal ms-2">({key})</small>
                             </label>
                             <p className="text-muted small mb-0">Schaltet das filmreife Hangar-Hintergrundbild im oberen Bereich ein oder aus.</p>
                         </div>
@@ -194,26 +204,30 @@ export default function DesignSettings() {
 
         return (
             <div key={key} className="col-md-6 mb-3">
-                <label className="form-label d-flex justify-content-between">
-                    <span className="fw-bold">{label}</span>
+                <label className="form-label d-flex justify-content-between align-items-center">
+                    <span className="fw-bold" style={TextShadowOrNot(value)}>
+                        {label} <small className="text-muted fw-normal ms-1">({key})</small>
+                    </span>
                     {isColor && (
                         <div 
                             style={{ 
-                                width: '20px', 
-                                height: '20px', 
-                                backgroundColor: value, 
+                                width: '30px', 
+                                height: '30px', 
+                                background: isGradient ? 'none' : trimmedValue,
+                                backgroundImage: isGradient ? trimmedValue : 'none',
                                 border: '1px solid #ccc',
-                                borderRadius: '3px'
+                                borderRadius: '4px',
+                                boxShadow: 'inset 0 0 4px rgba(0,0,0,0.2)'
                             }} 
                         />
                     )}
                 </label>
                 <div className="input-group">
-                    {isColor && (
+                    {isColor && !isGradient && (
                         <input 
                             type="color" 
                             className="form-control form-control-color" 
-                            value={value.startsWith('#') ? value : '#000000'}
+                            value={trimmedValue.startsWith('#') ? trimmedValue : '#000000'}
                             onChange={(e) => handleUpdate(key, e.target.value)}
                             title="Choose your color"
                             style={{ width: '60px' }}
@@ -307,8 +321,9 @@ export default function DesignSettings() {
                         className="btn btn-primary" 
                         onClick={handleSave} 
                         disabled={!hasChanges || saving}
+                        title="Speichern und Seite neu laden (Ctrl+S)"
                     >
-                        {saving ? 'Speichert...' : 'Speichern & Neu laden'}
+                        {saving ? 'Speichert...' : 'Speichern & Neu laden (Ctrl+S)'}
                     </button>
                     <button 
                         className="btn btn-outline-secondary" 

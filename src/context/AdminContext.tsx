@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Category, Item } from '@/types';
+import { Category, Item, Zutat } from '@/types';
 
 interface Toast {
     message: string;
@@ -11,7 +11,7 @@ interface Toast {
 interface AdminContextType {
     categories: Category[];
     items: Item[];
-    zutaten: any[]; // Define proper type if possible
+    zutaten: Zutat[];
     loading: boolean;
     refreshData: () => Promise<void>;
     showToast: (msg: string, type?: 'success' | 'error') => void;
@@ -22,7 +22,7 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 export function AdminProvider({ children }: { children: React.ReactNode }) {
     const [categories, setCategories] = useState<Category[]>([]);
     const [items, setItems] = useState<Item[]>([]);
-    const [zutaten, setZutaten] = useState<any[]>([]);
+    const [zutaten, setZutaten] = useState<Zutat[]>([]);
     const [loading, setLoading] = useState(true);
     const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -43,7 +43,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     };
 
     useEffect(() => {
-        refreshData();
+        void refreshData();
     }, []);
 
     const showToast = (message: string, type: 'success' | 'error' = 'success') => {

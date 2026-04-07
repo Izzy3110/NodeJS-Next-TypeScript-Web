@@ -74,3 +74,9 @@ export interface InvoiceData {
     totalAmount: number;
     currency: string;
 }
+
+export interface Zutat {
+    id: number;
+    name: string;
+    good_price: number;
+}

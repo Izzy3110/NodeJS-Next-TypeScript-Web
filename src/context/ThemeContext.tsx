@@ -1,21 +1,45 @@
-
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import themeData from "@/app/theme.json"; // Default fallback
 
 type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  designSettings: Record<string, string>;
+  refreshDesignSettings: () => Promise<void>;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark"); // Default to dark as per current design
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [designSettings, setDesignSettings] = useState<Record<string, string>>(themeData);
+
+  const fetchDesignSettings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/design');
+      if (res.ok) {
+        const data = await res.json();
+        const merged = { ...themeData, ...data };
+        setDesignSettings(merged);
+        
+        // Apply to CSS variables on load
+        Object.entries(merged).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value as string);
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch design settings:", error);
+    }
+  }, []);
 
   useEffect(() => {
+    // Initial fetch
+    fetchDesignSettings();
+
     const savedTheme = localStorage.getItem("theme") as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -23,7 +47,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       document.documentElement.setAttribute("data-theme", "dark");
     }
-  }, []);
+  }, [fetchDesignSettings]);
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -33,7 +57,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      toggleTheme, 
+      designSettings, 
+      refreshDesignSettings: fetchDesignSettings 
+    }}>
       {children}
     </ThemeContext.Provider>
   );
