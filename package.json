@@ -15,6 +15,7 @@
     "test:api-keys:generate": "npx tsx scripts/generate_api_key.ts",
     "test:pc-clients:list": "npx tsx scripts/list_pc_clients.ts",
     "test:pc-clients:clear": "npx tsx scripts/clear_pc_clients.ts",
+    "test:invoice:pdf": "npx tsx scripts/invoice_preparation.ts 1 | npx tsx scripts/invoice_generation.ts",
     "system:versions": "npx tsx scripts/manage_versions.ts --show",
     "system:versions:compare": "npx tsx scripts/manage_versions.ts --compare",
     "system:versions:upgrade": "npx tsx scripts/manage_versions.ts --upgrade",
