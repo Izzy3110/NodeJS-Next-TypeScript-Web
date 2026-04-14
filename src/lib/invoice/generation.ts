@@ -49,20 +49,16 @@ export async function createInvoice(data: any) {
       doc.font('Helvetica').text(new Date().toLocaleString(), 110, 37, { align: 'right' });
 
       // 2. Header Logo (Top Left)
-      doc.save();
-      doc.translate(50, 25);
-      doc.scale(6); 
-      doc.path('M1.946 9.315c-.522.174-.527.455.01.634l2.89.963 1.152 2.305c.179.359.458.359.638 0l.963-1.926 2.305-1.152c.359-.179.359-.458 0-.638l-7.958-3.186zm6.756 1.152l-2.305 1.152-.963 1.926c-.179.359-.458.359-.638 0l-1.152-2.305-2.89-.963c-.537-.179-.532-.46.01-.634l7.958-3.186c.359-.179.458-.179.638 0l-3.186 7.958c-.174.537-.455.532-.634-.01l-.963-2.89-2.305-1.152z')
-         .fill('#0056b3'); 
-      doc.restore();
+      const logoPath = path.join(process.cwd(), 'takeoff_logo_transparent', 'takeoff_logo_transparent.png');
+      doc.image(logoPath, 50, 25, { height: 70 });
 
       // 3. INVOICE Label (Left, below logo)
       const logoHeight = 70;
-      const invoiceLabelTop = 25;
+      const invoiceLabelTop = 25 + logoHeight + 10;
       doc.fontSize(20).font('Helvetica-Bold').text(t('invoice_title'), 50, invoiceLabelTop);
 
       // 4. Addresses Area
-      const infoTop = invoiceLabelTop + 120;
+      const infoTop = invoiceLabelTop + 65;
       
       // Sender (Left)
       doc.fontSize(10).font('Helvetica-Bold').text('TakeOff Restaurant', 50, infoTop);
